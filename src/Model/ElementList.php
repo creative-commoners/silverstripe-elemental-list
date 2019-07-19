@@ -6,6 +6,7 @@ use DNADesign\Elemental\Models\BaseElement;
 use DNADesign\Elemental\Models\ElementalArea;
 use DNADesign\Elemental\Extensions\ElementalAreasExtension;
 
+use ElementListEditor;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
@@ -79,8 +80,29 @@ class ElementList extends BaseElement
         return 'Elements';
     }
 
-    public function inlineEditable()
+    public function getCMSFields()
     {
-        return false;
+        $fields = parent::getCMSFields();
+
+        $fields->addFieldsToTab(
+            'Root.Main',
+            [
+                ElementListEditor::create('Elements', $this->Elements()),
+            ]
+        );
+
+        return $fields;
     }
+
+    protected function provideBlockSchema()
+    {
+        $blockSchema = parent::provideBlockSchema();
+        $blockSchema['componentName'] = 'DNADesignElementList';
+        return $blockSchema;
+    }
+
+//    public function inlineEditable()
+//    {
+//        return false;
+//    }
 }
